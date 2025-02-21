@@ -1,12 +1,15 @@
 // js/training.js
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
+    console.log("No user detected in training.js; redirecting to login.");
     window.location.href = "index.html";
   } else {
+    console.log("User detected in training.js:", user.email);
     var db = firebase.firestore();
     db.collection("characters").doc(user.uid).get().then(function(doc) {
       if (doc.exists) {
         var charClass = doc.data().class;
+        console.log("Character class:", charClass);
         var skills = [];
         // Define available skills based on class.
         if (charClass === "thief") {
@@ -49,9 +52,10 @@ document.getElementById("train-btn").addEventListener("click", function() {
       transaction.update(charRef, { skills: skills });
     });
   }).then(function() {
+    console.log("Training transaction successful for skill:", selectedSkill);
     document.getElementById("training-result").innerText =
       "Training succeeded for " + selectedSkill + ".";
   }).catch(function(error) {
-    console.error("Transaction failed:", error);
+    console.error("Training transaction failed:", error);
   });
 });
