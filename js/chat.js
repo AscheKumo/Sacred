@@ -1,8 +1,10 @@
 // js/chat.js
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
+    console.log("No user detected in chat.js; redirecting to login.");
     window.location.href = "index.html";
   } else {
+    console.log("User detected in chat.js:", user.email);
     var db = firebase.firestore();
     // Listen for chat messages ordered by timestamp.
     db.collection("chatMessages").orderBy("timestamp")
@@ -37,6 +39,7 @@ document.getElementById("send-chat-btn").addEventListener("click", function() {
       content: message,
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     }).then(function() {
+      console.log("Chat message sent by:", username);
       document.getElementById("chat-input").value = "";
     });
   });
