@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Auth Test</title>
+  <!-- Minimal Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script>
+    // Use your current configuration:
+    var firebaseConfig = {
+      apiKey: "AIzaSyDj1BAEqMrLGnYzDZ_u-xB086TYuIfRz70",
+      authDomain: "sacredk-a50c4.firebaseapp.com",
+      projectId: "sacredk-a50c4",
+      storageBucket: "sacredk-a50c4.firebasestorage.app",
+      messagingSenderId: "1067109492118",
+      appId: "1:1067109492118:web:eb8c619199b364ef7ba9b7",
+      measurementId: "G-X2NJQMR47K"
+    };
+
+    console.log("Config object:", firebaseConfig);
+
+    try {
+      firebase.initializeApp(firebaseConfig);
+      console.log("Firebase initialized. App options:", firebase.app().options);
+    } catch (error) {
+      console.error("Initialization error:", error);
+    }
+
+    // Attempt to create a test user:
+    function testSignup() {
+      firebase.auth().createUserWithEmailAndPassword("testuser@example.com", "testpassword")
+      .then(function(userCredential) {
+        console.log("User registered successfully:", userCredential.user);
+      })
+      .catch(function(error) {
+        console.error("Registration error:", error);
+      });
+    }
+  </script>
+</head>
+<body>
+  <h1>Firebase Auth Test</h1>
+  <button onclick="testSignup()">Register Test User</button>
+</body>
+</html>
