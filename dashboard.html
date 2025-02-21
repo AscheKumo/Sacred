@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <!-- Persistent Navigation Menu -->
+  <header>
+    <nav>
+      <a href="dashboard.html">Dashboard</a> |
+      <a href="deeds.html">Deeds</a> |
+      <a href="training.html">Training</a> |
+      <a href="chat.html">Chat</a> |
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
 
+  <h1>Dashboard</h1>
+  <div id="character-section">
+    <div id="character-form" style="display:none;">
+      <h2>Create Your Character</h2>
+      <input type="text" id="char-username" placeholder="Character Name"><br>
+      <label>Alignment:</label>
+      <select id="char-alignment">
+        <option value="good">Good</option>
+        <option value="neutral">Neutral</option>
+        <option value="evil">Evil</option>
+      </select><br>
+      <label>City of Birth:</label>
+      <select id="char-city">
+        <option value="CityA">CityA</option>
+        <option value="CityB">CityB</option>
+        <option value="CityC">CityC</option>
+      </select><br>
+      <input type="number" id="char-age" placeholder="Age" min="18" max="65"><br>
+      <label>Gender:</label>
+      <select id="char-gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select><br>
+      <label>Class:</label>
+      <select id="char-class">
+        <option value="vendor">Vendor</option>
+        <option value="squire">Squire</option>
+        <option value="thief">Thief</option>
+        <option value="farmhand">Farmhand</option>
+        <option value="student">Student</option>
+        <option value="blacksmith_apprentice">Blacksmith Apprentice</option>
+      </select><br>
+      <button id="create-char-btn">Create Character</button>
+    </div>
+    <div id="character-info" style="display:none;">
+      <h2>Your Character</h2>
+      <p id="char-details"></p>
+    </div>
+  </div>
+</body>
+</html>
