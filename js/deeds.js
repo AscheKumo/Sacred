@@ -1,7 +1,10 @@
 // js/deeds.js
 firebase.auth().onAuthStateChanged(function(user) {
   if (!user) {
+    console.log("No user detected; redirecting to login.");
     window.location.href = "index.html";
+  } else {
+    console.log("User detected in deeds.js:", user.email);
   }
 });
 
@@ -29,6 +32,7 @@ document.getElementById("perform-deed-btn").addEventListener("click", function()
         transaction.update(charRef, { gold: newGold, experience: newExp });
       });
     }).then(function() {
+      console.log("Deed transaction successful.");
       document.getElementById("result").innerText =
         "Deed succeeded! You earned " + rewardGold + " gold and some experience.";
     }).catch(function(error) {
