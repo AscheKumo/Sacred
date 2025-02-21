@@ -1,1 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Game Login</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/main.js"></script>
+</head>
+<body>
+  <!-- Persistent Navigation Menu -->
+  <header>
+    <nav>
+      <a href="dashboard.html">Dashboard</a> |
+      <a href="deeds.html">Deeds</a> |
+      <a href="training.html">Training</a> |
+      <a href="chat.html">Chat</a> |
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+  
+  <h1>Welcome to the Game</h1>
+  <div id="user-forms">
+    <div id="login-form">
+      <h2>Login</h2>
+      <input type="email" id="login-email" placeholder="Email"><br>
+      <input type="password" id="login-password" placeholder="Password"><br>
+      <button id="login-btn">Login</button>
+    </div>
+    <div id="register-form">
+      <h2>Register</h2>
+      <input type="email" id="register-email" placeholder="Email"><br>
+      <input type="password" id="register-password" placeholder="Password"><br>
+      <button id="register-btn">Register</button>
+    </div>
+  </div>
+</body>
+</html>
 
