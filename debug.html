@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Firebase Config Debug</title>
+  <!-- Load minimal Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <!-- Optionally, include Firestore if you want to see its config -->
+  <!-- <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script> -->
+  <script>
+    // Your Firebase configuration
+    var firebaseConfig = { 
+      apiKey: "AIzaSyBtcV1JZX8Xmc374WcCD1CJ68pGLEQpnUc",
+      authDomain: "sacredgg-a171a.firebaseapp.com",
+      projectId: "sacredgg-a171a",
+      storageBucket: "sacredgg-a171a.firebasestorage.app", // You're 100% sure?
+      messagingSenderId: "416265042350",
+      appId: "1:416265042350:web:75cf8705a1fb1f5174b03f",
+      measurementId: "G-EC25JFK8S7"
+    };
+
+    console.log("Firebase configuration object:", firebaseConfig);
+
+    try {
+      firebase.initializeApp(firebaseConfig);
+      console.log("Firebase initialized successfully.");
+
+      var app = firebase.app();
+      console.log("Firebase App Name:", app.name);
+      console.log("Firebase App Options:", app.options);
+      
+      // Log the storageBucket that Firebase sees:
+      if (app.options.storageBucket) {
+        console.log("Storage Bucket from Firebase Options:", app.options.storageBucket);
+      } else {
+        console.warn("No storageBucket found in Firebase App Options.");
+      }
+      
+      // Attempt a simple Auth operation for debugging (e.g., checking current user)
+      firebase.auth().onAuthStateChanged(function(user) {
+        console.log("Auth state changed. Current user:", user);
+      });
+      
+    } catch (error) {
+      console.error("Error initializing Firebase:", error);
+    }
+  </script>
+</head>
+<body>
+  <h1>Check the Console for Firebase Debug Info</h1>
+</body>
+</html>
