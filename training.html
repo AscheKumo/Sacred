@@ -1,1 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Training</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/training.js"></script>
+</head>
+<body>
+  <!-- Persistent Navigation Menu -->
+  <header>
+    <nav>
+      <a href="dashboard.html">Dashboard</a> |
+      <a href="deeds.html">Deeds</a> |
+      <a href="training.html">Training</a> |
+      <a href="chat.html">Chat</a> |
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
 
+  <h1>Training</h1>
+  <form id="training-form">
+    <label for="skill-select">Choose a skill:</label>
+    <select id="skill-select">
+      <option value="default">Select a skill</option>
+    </select><br>
+    <button type="button" id="train-btn">Train Skill</button>
+  </form>
+  <p id="training-result"></p>
+</body>
+</html>
