@@ -13,7 +13,7 @@ console.log("Firebase configuration object:", firebaseConfig);
 
 try {
   firebase.initializeApp(firebaseConfig);
-  console.log("Firebase has been initialized successfully.");
+  console.log("Firebase has been initialized successfully v3.");
 
   var app = firebase.app();
   console.log("Firebase App Name:", app.name);
