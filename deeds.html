@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Deeds</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Firebase libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/deeds.js"></script>
+</head>
+<body>
+  <!-- Persistent Navigation Menu -->
+  <header>
+    <nav>
+      <a href="dashboard.html">Dashboard</a> |
+      <a href="deeds.html">Deeds</a> |
+      <a href="training.html">Training</a> |
+      <a href="chat.html">Chat</a> |
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
 
+  <h1>Perform a Deed</h1>
+  <form id="deed-form">
+    <label>
+      <input type="radio" name="deed" value="good">
+      Catch an escaped chicken (Good)
+    </label><br>
+    <label>
+      <input type="radio" name="deed" value="neutral">
+      Fishing (Neutral)
+    </label><br>
+    <label>
+      <input type="radio" name="deed" value="evil">
+      Steal a bucket (Evil)
+    </label><br>
+    <button type="button" id="perform-deed-btn">Perform Deed</button>
+  </form>
+  <p id="result"></p>
+</body>
+</html>
