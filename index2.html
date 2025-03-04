@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realms of Destiny</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --bg-color-secondary: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-1: #ff4d4d;
+            --accent-2: #ffad4d;
+            --accent-3: #ffff4d;
+            --accent-4: #4dff4d;
+            --accent-5: #4dffff;
+            --accent-6: #4d4dff;
+            --accent-7: #ff4dff;
+            --panel-bg: rgba(30, 30, 30, 0.9);
+            --panel-border: rgba(255, 255, 255, 0.1);
+            --btn-bg: #2d2d2d;
+            --btn-hover: #3d3d3d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 77, 77, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 10%, rgba(255, 173, 77, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 40% 50%, rgba(77, 255, 77, 0.05) 0%, transparent 30%),
+                radial-gradient(circle at 70% 70%, rgba(77, 77, 255, 0.05) 0%, transparent 25%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, 
+                var(--accent-1), 
+                var(--accent-2), 
+                var(--accent-3), 
+                var(--accent-4), 
+                var(--accent-5), 
+                var(--accent-6), 
+                var(--accent-7));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: rainbow-shift 15s linear infinite;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes rainbow-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Game layout */
+        .game-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border: 1px solid var(--panel-border);
+            margin-bottom: 20px;
+        }
+
+        .character-panel {
+            grid-column: 1;
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        .main-panel {
+            grid-column: 2;
+        }
+
+        /* UI elements */
+        h2 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 5px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin: 15px 0 10px;
+        }
+
+        .stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .xp-fill {
+            background: linear-gradient(90deg, var(--accent-3), var(--accent-4));
+        }
+
+        .health-fill {
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+        }
+
+        .alignment {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+        }
+
+        .alignment-marker {
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-5);
+            border-radius: 50%;
+            position: absolute;
+            transform: translateX(-50%);
+            transition: left 0.3s ease;
+        }
+
+        .alignment-bar {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin: 10px 0;
+            position: relative;
+        }
+
+        /* Buttons */
+        .btn {
+            background-color: var(--btn-bg);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-6), var(--accent-7));
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Action tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.2s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab:hover {
+            opacity: 1;
+        }
+
+        .tab.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--accent-5);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Skills and items */
+        .skill-list, .item-list {
+            list-style: none;
+        }
+
+        .skill-item, .inventory-item {
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-item:hover, .inventory-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .inventory-item .item-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        /* Cities and travel */
+        .city-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .city-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .city-card:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .city-card.current {
+            border: 1px solid var(--accent-5);
+        }
+
+        /* Quests */
+        .quest-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--accent-2);
+        }
+
+        .quest-rewards {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+        }
+
+        /* Store */
+        .store-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+
+        .store-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 15px;
+            transition: all 0.2s ease;
+        }
+
+        .store-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .item-price {
+            color: var(--accent-3);
+            font-weight: bold;
+        }
+
+        /* Game log */
+        .game-log {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-container {
+                grid-template-columns: 1fr;
+            }
+
+            .character-panel, .main-panel {
+                grid-column: 1;
+            }
+
+            .character-panel {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        /* Animation for notifications */
+        @keyframes notification {
+            0% { transform: translateY(-20px); opacity: 0; }
+            10% { transform: translateY(0); opacity: 1; }
+            90% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-20px); opacity: 0; }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--panel-bg);
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: notification 3s forwards;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Realms of Destiny</h1>
+            <p>Embark on a journey of adventure, trade, and mystical quests</p>
+        </header>
+
+        <div class="game-container">
+            <!-- Character Panel -->
+            <div class="character-panel panel">
+                <h2>Character</h2>
+                <div id="character-name" class="stat">
+                    <span>Name:</span>
+                    <span id="name-value">Adventurer</span>
+                </div>
+                
+                <div class="stat">
+                    <span>Level:</span>
+                    <span id="level-value">1</span>
+                </div>
+                
+                <div class="stat">
+                    <span>Experience:</span>
+                    <span id="xp-value">0/100</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill xp-fill" style="width: 0%"></div>
+                </div>
+                
+                <div class="stat">
+                    <span>Health:</span>
+                    <span id="health-value">100/100</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill health-fill" style="width: 100%"></div>
+                </div>
+                
+                <div class="stat">
+                    <span>Gold:</span>
+                    <span id="gold-value">50</span>
+                </div>
+                
+                <h3>Alignment</h3>
+                <div class="alignment">
+                    <span>Evil</span>
+                    <span>Neutral</span>
+                    <span>Good</span>
+                </div>
+                <div class="alignment-bar">
+                    <div class="alignment-marker" style="left: 50%"></div>
+                </div>
+                
+                <h3>Skills</h3>
+                <ul class="skill-list" id="skill-list">
+                    <!-- Skills will be populated by JavaScript -->
+                </ul>
+                
+                <h3>Inventory</h3>
+                <div class="stat">
+                    <span>Carrying:</span>
+                    <span id="inventory-weight">0/100</span>
+                </div>
+                <ul class="item-list" id="inventory-list">
+                    <!-- Inventory will be populated by JavaScript -->
+                </ul>
+                
+                <h3>Equipment</h3>
+                <div id="equipment-list">
+                    <div class="stat">
+                        <span>Weapon:</span>
+                        <span id="equipped-weapon">None</span>
+                    </div>
+                    <div class="stat">
+                        <span>Armor:</span>
+                        <span id="equipped-armor">None</span>
+                    </div>
+                    <div class="stat">
+                        <span>Accessory:</span>
+                        <span id="equipped-accessory">None</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Game Panel -->
+            <div class="main-panel">
+                <div class="tabs">
+                    <div class="tab active" data-tab="actions">Actions</div>
+                    <div class="tab" data-tab="travel">Travel</div>
+                    <div class="tab" data-tab="quests">Quests</div>
+                    <div class="tab" data-tab="store">Store</div>
+                </div>
+
+                <!-- Actions Tab -->
+                <div class="tab-content panel active" id="actions-tab">
+                    <h2>Actions</h2>
+                    <p>What would you like to do in the city of <span id="current-city-name">Rivendale</span>?</p>
+                    
+                    <div class="action-buttons">
+                        <button class="btn" id="btn-work">Work (Earn 5-15 Gold)</button>
+                        <button class="btn" id="btn-train">Train Skills (Cost 20 Gold)</button>
+                        <button class="btn" id="btn-rest">Rest (Restore Health)</button>
+                        <button class="btn" id="btn-deed-good">Perform Good Deed</button>
+                        <button class="btn" id="btn-deed-evil">Perform Evil Deed</button>
+                    </div>
+                    
+                    <div class="training-section" id="training-section" style="display: none; margin-top: 20px;">
+                        <h3>Train Skills</h3>
+                        <div class="trainable-skills">
+                            <button class="btn" data-skill="combat">Combat Training</button>
+                            <button class="btn" data-skill="stealth">Stealth Training</button>
+                            <button class="btn" data-skill="trading">Trading Skills</button>
+                            <button class="btn" data-skill="magic">Magic Studies</button>
+                            <button class="btn" data-skill="charisma">Charisma Practice</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Travel Tab -->
+                <div class="tab-content panel" id="travel-tab">
+                    <h2>Travel</h2>
+                    <p>Select a city to travel to:</p>
+                    
+                    <div class="city-list" id="city-list">
+                        <!-- Cities will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Quests Tab -->
+                <div class="tab-content panel" id="quests-tab">
+                    <h2>Available Quests</h2>
+                    <div id="quest-list">
+                        <!-- Quests will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Store Tab -->
+                <div class="tab-content panel" id="store-tab">
+                    <h2>City Market</h2>
+                    <p>Buy and sell goods in <span id="store-city-name">Rivendale</span>.</p>
+                    
+                    <h3>Items for Sale</h3>
+                    <div class="store-items" id="store-items">
+                        <!-- Store items will be populated by JavaScript -->
+                    </div>
+                    
+                    <h3>Sell Your Items</h3>
+                    <div id="sellable-items">
+                        <p>Select items from your inventory to sell them.</p>
+                    </div>
+                </div>
+
+                <!-- Game Log -->
+                <div class="panel">
+                    <h2>Adventure Log</h2>
+                    <div class="game-log" id="game-log">
+                        <div class="log-entry">Welcome to Realms of Destiny! Your adventure begins in Rivendale.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game start modal -->
+    <div id="start-modal" style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    ">
+        <div style="
+            background-color: var(--panel-bg);
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+        ">
+            <h2 style="
+                font-size: 2rem;
+                margin-bottom: 20px;
+                background: linear-gradient(90deg, var(--accent-1), var(--accent-7));
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+            ">Welcome to Realms of Destiny</h2>
+            
+            <p style="margin-bottom: 20px;">Enter your character's name to begin your adventure:</p>
+            
+            <input type="text" id="character-name-input" style="
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                background-color: rgba(255, 255, 255, 0.1);
+                border: 1px solid var(--panel-border);
+                border-radius: 4px;
+                color: var(--text-color);
+                font-size: 1rem;
+            " placeholder="Enter your name">
+            
+            <button id="start-game" class="btn btn-primary" style="
+                width: 100%;
+                padding: 12px;
+                font-size: 1.1rem;
+            ">Begin Adventure</button>
+        </div>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            character: {
+                name: "Adventurer",
+                level: 1,
+                xp: 0,
+                xpToNextLevel: 100,
+                health: 100,
+                maxHealth: 100,
+                gold: 50,
+                alignment: 50, // 0 = Evil, 50 = Neutral, 100 = Good
+                skills: {
+                    combat: 1,
+                    stealth: 1,
+                    trading: 1,
+                    magic: 1,
+                    charisma: 1
+                },
+                inventory: [],
+                inventoryWeight: 0,
+                inventoryCapacity: 100,
+                equipment: {
+                    weapon: null,
+                    armor: null,
+                    accessory: null
+                }
+            },
+            currentCity: "Rivendale",
+            cities: [
+                {
+                    name: "Rivendale",
+                    description: "A peaceful elven settlement nestled in a valley.",
+                    tradingBonus: 0,
+                    storeInventory: []
+                },
+                {
+                    name: "Ironforge",
+                    description: "A dwarven city known for its smithies and warriors.",
+                    tradingBonus: 10,
+                    storeInventory: []
+                },
+                {
+                    name: "Shadowkeep",
+                    description: "A mysterious town with a dark reputation.",
+                    tradingBonus: -5,
+                    storeInventory: []
+                },
+                {
+                    name: "Goldcrest",
+                    description: "A wealthy trading hub with expensive tastes.",
+                    tradingBonus: 20,
+                    storeInventory: []
+                },
+                {
+                    name: "Mistwood",
+                    description: "A druidic settlement deep in the ancient forest.",
+                    tradingBonus: 5,
+                    storeInventory: []
+                }
+            ],
+            availableQuests: [],
+            availableItems: [
+                { id: 1, name: "Iron Sword", type: "weapon", value: 40, weight: 5, damage: 5 },
+                { id: 2, name: "Steel Sword", type: "weapon", value: 100, weight: 6, damage: 10 },
+                { id: 3, name: "Leather Armor", type: "armor", value: 50, weight: 8, defense: 5 },
+                { id: 4, name: "Chain Mail", type: "armor", value: 120, weight: 15, defense: 10 },
+                { id: 5, name: "Health Potion", type: "consumable", value: 20, weight: 1, effect: "health", amount: 25 },
+                { id: 6, name: "Lucky Coin", type: "accessory", value: 30, weight: 0, effect: "gold", amount: 2 },
+                { id: 7, name: "Magical Orb", type: "accessory", value: 75, weight: 1, effect: "magic", amount: 5 },
+                { id: 8, name: "Silk Cloth", type: "material", value: 15, weight: 1 },
+                { id: 9, name: "Iron Ingot", type: "material", value: 25, weight: 3 },
+                { id: 10, name: "Gemstone", type: "material", value: 50, weight: 0 },
+                { id: 11, name: "Enchanted Bow", type: "weapon", value: 150, weight: 3, damage: 8 },
+                { id: 12, name: "Plate Armor", type: "armor", value: 200, weight: 20, defense: 15 },
+                { id: 13, name: "Silver Ring", type: "accessory", value: 45, weight: 0, effect: "charisma", amount: 5 },
+                { id: 14, name: "Dagger", type: "weapon", value: 25, weight: 2, damage: 3 },
+                { id: 15, name: "Magic Scroll", type: "consumable", value: 60, weight: 0, effect: "xp", amount: 15 }
+            ],
+            questTemplates: [
+                {
+                    title: "Clear the Goblin Camp",
+                    description: "A group of goblins has been raiding nearby farms.",
+                    difficulty: "easy",
+                    goldReward: [30, 50],
+                    xpReward: [20, 30],
+                    alignmentShift: 5,
+                    itemReward: true,
+                    requiredSkill: "combat",
+                    minSkillLevel: 2
+                },
+                {
+                    title: "Retrieve the Lost Artifact",
+                    description: "An ancient artifact was stolen from the local museum.",
+                    difficulty: "medium",
+                    goldReward: [60, 100],
+                    xpReward: [40, 60],
+                    alignmentShift: 10,
+                    itemReward: true,
+                    requiredSkill: "stealth",
+                    minSkillLevel: 3
+                },
+                {
+                    title: "Negotiate Peace Treaty",
+                    description: "Two rival merchant guilds need a mediator.",
+                    difficulty: "hard",
+                    goldReward: [100, 150],
+                    xpReward: [60, 90],
+                    alignmentShift: 15,
+                    itemReward: false,
+                    requiredSkill: "charisma",
+                    minSkillLevel: 4
+                },
+                {
+                    title: "Smuggle Contraband",
+                    description: "Deliver this package without asking questions.",
+                    difficulty: "medium",
+                    goldReward: [80, 120],
+                    xpReward: [30, 50],
+                    alignmentShift: -10,
+                    itemReward: true,
+                    requiredSkill: "stealth",
+                    minSkillLevel: 2
+                },
+                {
+                    title: "Break the Spell",
+                    description: "A local has been cursed and needs magical assistance.",
+                    difficulty: "hard",
+                    goldReward: [70, 120],
+                    xpReward: [50, 80],
+                    alignmentShift: 10,
+                    itemReward: true,
+                    requiredSkill: "magic",
+                    minSkillLevel: 3
+                },
+                {
+                    title: "Escort Merchant Caravan",
+                    description: "Protect valuable goods on a dangerous route.",
+                    difficulty: "medium",
+                    goldReward: [90, 130],
+                    xpReward: [40, 60],
+                    alignmentShift: 5,
+                    itemReward: false,
+                    requiredSkill: "combat",
+                    minSkillLevel: 3
+                },
+                {
+                    title: "Sabotage Competitor",
+                    description: "Make sure this rival merchant has... difficulties.",
+                    difficulty: "hard",
+                    goldReward: [120, 180],
+                    xpReward: [50, 70],
+                    alignmentShift: -15,
+                    itemReward: false,
+                    requiredSkill: "stealth",
+                    minSkillLevel: 4
+                },
+                {
+                    title: "Investigate Hauntings",
+                    description: "Strange occurrences at an old manor need explanation.",
+                    difficulty: "medium",
+                    goldReward: [60, 90],
+                    xpReward: [40, 70],
+                    alignmentShift: 5,
+                    itemReward: true,
+                    requiredSkill: "magic",
+                    minSkillLevel: 2
+                }
+            ]
+        };
+
+        // DOM References
+        const DOM = {
+            nameValue: document.getElementById('name-value'),
+            levelValue: document.getElementById('level-value'),
+            xpValue: document.getElementById('xp-value'),
+            xpFill: document.querySelector('.xp-fill'),
+            healthValue: document.getElementById('health-value'),
+            healthFill: document.querySelector('.health-fill'),
+            goldValue: document.getElementById('gold-value'),
+            alignmentMarker: document.querySelector('.alignment-marker'),
+            skillList: document.getElementById('skill-list'),
+            inventoryList: document.getElementById('inventory-list'),
+            inventoryWeight: document.getElementById('inventory-weight'),
+            equippedWeapon: document.getElementById('equipped-weapon'),
+            equippedArmor: document.getElementById('equipped-armor'),
+            equippedAccessory: document.getElementById('equipped-accessory'),
+            currentCityName: document.getElementById('current-city-name'),
+            storeCityName: document.getElementById('store-city-name'),
+            cityList: document.getElementById('city-list'),
+            storeItems: document.getElementById('store-items'),
+            sellableItems: document.getElementById('sellable-items'),
+            questList: document.getElementById('quest-list'),
+            gameLog: document.getElementById('game-log'),
+            tabs: document.querySelectorAll('.tab'),
+            tabContents: document.querySelectorAll('.tab-content'),
+            
+            // Action buttons
+            btnWork: document.getElementById('btn-work'),
+            btnTrain: document.getElementById('btn-train'),
+            btnRest: document.getElementById('btn-rest'),
+            btnGoodDeed: document.getElementById('btn-deed-good'),
+            btnEvilDeed: document.getElementById('btn-deed-evil'),
+            trainingSection: document.getElementById('training-section'),
+            
+            // Start modal
+            startModal: document.getElementById('start-modal'),
+            characterNameInput: document.getElementById('character-name-input'),
+            startGameBtn: document.getElementById('start-game')
+        };
+
+        // Helper Functions
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function updateCharacterUI() {
+            DOM.nameValue.textContent = gameState.character.name;
+            DOM.levelValue.textContent = gameState.character.level;
+            DOM.xpValue.textContent = `${gameState.character.xp}/${gameState.character.xpToNextLevel}`;
+            DOM.xpFill.style.width = `${(gameState.character.xp / gameState.character.xpToNextLevel) * 100}%`;
+            DOM.healthValue.textContent = `${gameState.character.health}/${gameState.character.maxHealth}`;
+            DOM.healthFill.style.width = `${(gameState.character.health / gameState.character.maxHealth) * 100}%`;
+            DOM.goldValue.textContent = gameState.character.gold;
+            DOM.alignmentMarker.style.left = `${gameState.character.alignment}%`;
+            DOM.inventoryWeight.textContent = `${gameState.character.inventoryWeight}/${gameState.character.inventoryCapacity}`;
+            
+            // Update equipment display
+            DOM.equippedWeapon.textContent = gameState.character.equipment.weapon ? gameState.character.equipment.weapon.name : "None";
+            DOM.equippedArmor.textContent = gameState.character.equipment.armor ? gameState.character.equipment.armor.name : "None";
+            DOM.equippedAccessory.textContent = gameState.character.equipment.accessory ? gameState.character.equipment.accessory.name : "None";
+            
+            // Update skills
+            DOM.skillList.innerHTML = '';
+            for (const skill in gameState.character.skills) {
+                const skillItem = document.createElement('li');
+                skillItem.className = 'skill-item';
+                skillItem.innerHTML = `
+                    <span>${skill.charAt(0).toUpperCase() + skill.slice(1)}</span>
+                    <span>Level ${gameState.character.skills[skill]}</span>
+                `;
+                DOM.skillList.appendChild(skillItem);
+            }
+
+            // Update inventory
+            DOM.inventoryList.innerHTML = '';
+            if (gameState.character.inventory.length === 0) {
+                const emptyItem = document.createElement('li');
+                emptyItem.textContent = 'No items';
+                DOM.inventoryList.appendChild(emptyItem);
+            } else {
+                gameState.character.inventory.forEach(item => {
+                    const inventoryItem = document.createElement('li');
+                    inventoryItem.className = 'inventory-item';
+                    
+                    let itemDescription = item.name;
+                    if (item.type === 'weapon') itemDescription += ` (Damage: ${item.damage})`;
+                    if (item.type === 'armor') itemDescription += ` (Defense: ${item.defense})`;
+                    
+                    inventoryItem.innerHTML = `
+                        <span>${itemDescription}</span>
+                        <div class="item-actions">
+                            ${item.type === 'weapon' || item.type === 'armor' || item.type === 'accessory' ? 
+                                `<button class="btn btn-secondary btn-equip" data-item-id="${item.id}">Equip</button>` : ''}
+                            ${item.type === 'consumable' ? 
+                                `<button class="btn btn-secondary btn-use" data-item-id="${item.id}">Use</button>` : ''}
+                        </div>
+                    `;
+                    DOM.inventoryList.appendChild(inventoryItem);
+                });
+            }
+        }
+
+        function updateCurrentCityUI() {
+            DOM.currentCityName.textContent = gameState.currentCity;
+            DOM.storeCityName.textContent = gameState.currentCity;
+            
+            // Update city list in travel tab
+            DOM.cityList.innerHTML = '';
+            gameState.cities.forEach(city => {
+                const cityCard = document.createElement('div');
+                cityCard.className = `city-card ${city.name === gameState.currentCity ? 'current' : ''}`;
+                cityCard.dataset.city = city.name;
+                cityCard.innerHTML = `
+                    <h3>${city.name}</h3>
+                    <p>${city.description}</p>
+                    ${city.name !== gameState.currentCity ? 
+                        `<button class="btn btn-secondary btn-travel" data-city="${city.name}">Travel Here</button>` : 
+                        '<p><em>Current location</em></p>'}
+                `;
+                DOM.cityList.appendChild(cityCard);
+            });
+        }
+
+        function updateStoreUI() {
+            // Get current city's store inventory
+            const currentCity = gameState.cities.find(city => city.name === gameState.currentCity);
+            
+            DOM.storeItems.innerHTML = '';
+            
+            if (currentCity.storeInventory.length === 0) {
+                DOM.storeItems.innerHTML = '<p>No items available in this store.</p>';
+            } else {
+                currentCity.storeInventory.forEach(item => {
+                    const storeItem = document.createElement('div');
+                    storeItem.className = 'store-item';
+                    
+                    let itemDescription = '';
+                    if (item.type === 'weapon') itemDescription = `Damage: ${item.damage}`;
+                    if (item.type === 'armor') itemDescription = `Defense: ${item.defense}`;
+                    if (item.type === 'accessory') itemDescription = `Effect: +${item.amount} ${item.effect}`;
+                    if (item.type === 'consumable') itemDescription = `Restores ${item.amount} ${item.effect}`;
+                    
+                    storeItem.innerHTML = `
+                        <h4>${item.name}</h4>
+                        <p>${itemDescription}</p>
+                        <p>Weight: ${item.weight}</p>
+                        <p class="item-price">${item.value} gold</p>
+                        <button class="btn btn-secondary btn-buy" data-item-id="${item.id}">Buy</button>
+                    `;
+                    DOM.storeItems.appendChild(storeItem);
+                });
+            }
+
+            // Update sell section
+            DOM.sellableItems.innerHTML = '<p>Select items from your inventory to sell them.</p>';
+            
+            if (gameState.character.inventory.length > 0) {
+                const sellList = document.createElement('div');
+                sellList.className = 'sell-list';
+                
+                gameState.character.inventory.forEach(item => {
+                    const sellItem = document.createElement('div');
+                    sellItem.className = 'store-item';
+                    sellItem.innerHTML = `
+                        <h4>${item.name}</h4>
+                        <p class="item-price">Sell for ${Math.floor(item.value * 0.7)} gold</p>
+                        <button class="btn btn-secondary btn-sell" data-item-id="${item.id}">Sell</button>
+                    `;
+                    sellList.appendChild(sellItem);
+                });
+                
+                DOM.sellableItems.appendChild(sellList);
+            }
+        }
+
+        function updateQuestsUI() {
+            DOM.questList.innerHTML = '';
+            
+            if (gameState.availableQuests.length === 0) {
+                DOM.questList.innerHTML = '<p>There are no quests available in this city. Try traveling elsewhere or check back later.</p>';
+            } else {
+                gameState.availableQuests.forEach((quest, index) => {
+                    const questCard = document.createElement('div');
+                    questCard.className = 'quest-card';
+                    
+                    const canAccept = gameState.character.skills[quest.requiredSkill] >= quest.minSkillLevel;
+                    
+                    questCard.innerHTML = `
+                        <h3>${quest.title}</h3>
+                        <p>${quest.description}</p>
+                        <p>Difficulty: ${quest.difficulty}</p>
+                        <p>Required: ${quest.requiredSkill.charAt(0).toUpperCase() + quest.requiredSkill.slice(1)} level ${quest.minSkillLevel}</p>
+                        <div class="quest-rewards">
+                            <p>Rewards:</p>
+                            <p>• Gold: ${quest.goldReward[0]}-${quest.goldReward[1]}</p>
+                            <p>• Experience: ${quest.xpReward[0]}-${quest.xpReward[1]}</p>
+                            ${quest.itemReward ? '<p>• Possible item reward</p>' : ''}
+                            <p>• Alignment shift: ${quest.alignmentShift > 0 ? '+' + quest.alignmentShift + ' (Good)' : quest.alignmentShift + ' (Evil)'}</p>
+                        </div>
+                        <button class="btn ${canAccept ? 'btn-primary' : 'btn-secondary'} btn-quest" 
+                            data-quest-index="${index}" ${!canAccept ? 'disabled' : ''}>
+                            ${canAccept ? 'Accept Quest' : 'Skill Too Low'}
+                        </button>
+                    `;
+                    DOM.questList.appendChild(questCard);
+                });
+            }
+        }
+
+        function addLog(message) {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'log-entry';
+            logEntry.textContent = message;
+            DOM.gameLog.appendChild(logEntry);
+            DOM.gameLog.scrollTop = DOM.gameLog.scrollHeight;
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        // Game Mechanics Functions
+        function addXP(amount) {
+            gameState.character.xp += amount;
+            
+            // Level up if needed
+            if (gameState.character.xp >= gameState.character.xpToNextLevel) {
+                levelUp();
+            }
+            
+            updateCharacterUI();
+        }
+
+        function levelUp() {
+            gameState.character.level += 1;
+            gameState.character.xp -= gameState.character.xpToNextLevel;
+            gameState.character.xpToNextLevel = Math.floor(gameState.character.xpToNextLevel * 1.5);
+            gameState.character.maxHealth += 20;
+            gameState.character.health = gameState.character.maxHealth;
+            
+            showNotification(`Level up! You are now level ${gameState.character.level}`);
+            addLog(`You've reached level ${gameState.character.level}! Your maximum health has increased.`);
+        }
+
+        function changeAlignment(amount) {
+            gameState.character.alignment = Math.max(0, Math.min(100, gameState.character.alignment + amount));
+            updateCharacterUI();
+        }
+
+        function modifyHealth(amount) {
+            gameState.character.health = Math.min(gameState.character.maxHealth, Math.max(0, gameState.character.health + amount));
+            updateCharacterUI();
+            
+            if (gameState.character.health <= 0) {
+                playerDeath();
+            }
+        }
+
+        function modifyGold(amount) {
+            gameState.character.gold += amount;
+            updateCharacterUI();
+        }
+
+        function playerDeath() {
+            // Reset health to half
+            gameState.character.health = Math.floor(gameState.character.maxHealth / 2);
+            
+            // Lose some gold
+            const goldLoss = Math.floor(gameState.character.gold * 0.2);
+            gameState.character.gold -= goldLoss;
+            
+            addLog(`You were defeated! You lost ${goldLoss} gold and have been returned to health.`);
+            showNotification("You were defeated!");
+            
+            updateCharacterUI();
+        }
+
+        function performWork() {
+            // 80% chance of success
+            if (Math.random() < 0.8) {
+                const goldEarned = randomInt(5, 15);
+                const xpGained = randomInt(2, 5);
+                
+                addXP(xpGained);
+                modifyGold(goldEarned);
+                
+                addLog(`You performed work in ${gameState.currentCity} and earned ${goldEarned} gold and ${xpGained} XP.`);
+                showNotification(`Earned ${goldEarned} gold!`);
+            } else {
+                const healthLoss = randomInt(5, 15);
+                modifyHealth(-healthLoss);
+                
+                addLog(`You had an accident while working! You lost ${healthLoss} health.`);
+                showNotification(`Work accident! Lost ${healthLoss} health.`);
+            }
+        }
+
+        function trainSkill(skillName) {
+            const cost = 20;
+            
+            if (gameState.character.gold < cost) {
+                addLog("You don't have enough gold to train.");
+                showNotification("Not enough gold!");
+                return;
+            }
+            
+            modifyGold(-cost);
+            gameState.character.skills[skillName] += 1;
+            
+            addLog(`You trained your ${skillName} skill to level ${gameState.character.skills[skillName]}.`);
+            showNotification(`${skillName.charAt(0).toUpperCase() + skillName.slice(1)} skill improved!`);
+            
+            updateCharacterUI();
+        }
+
+        function performGoodDeed() {
+            const xpGained = randomInt(5, 15);
+            const alignmentChange = randomInt(5, 10);
+            const healthCost = randomInt(5, 10);
+            
+            addXP(xpGained);
+            changeAlignment(alignmentChange);
+            modifyHealth(-healthCost);
+            
+            addLog(`You performed a good deed, gaining ${xpGained} XP and shifting your alignment towards good, but lost ${healthCost} health in the process.`);
+            showNotification("Good deed performed!");
+        }
+
+        function performEvilDeed() {
+            const xpGained = randomInt(10, 20);
+            const goldGained = randomInt(5, 15);
+            const alignmentChange = -randomInt(5, 10);
+            
+            addXP(xpGained);
+            modifyGold(goldGained);
+            changeAlignment(alignmentChange);
+            
+            addLog(`You performed an evil deed, gaining ${xpGained} XP and ${goldGained} gold, but shifting your alignment towards evil.`);
+            showNotification("Evil deed performed!");
+        }
+
+        function restAtInn() {
+            const cost = 10;
+            
+            if (gameState.character.gold < cost) {
+                addLog("You don't have enough gold to rest at the inn.");
+                showNotification("Not enough gold!");
+                return;
+            }
+            
+            modifyGold(-cost);
+            modifyHealth(gameState.character.maxHealth - gameState.character.health);
+            
+            addLog(`You rested at the inn, restoring your health to maximum.`);
+            showNotification("Health fully restored!");
+        }
+
+        function travelToCity(cityName) {
+            // Check if it's a valid city
+            if (!gameState.cities.find(city => city.name === cityName)) {
+                return;
+            }
+            
+            // Chance of random encounter during travel
+            if (Math.random() < 0.3) {
+                const damageAmount = randomInt(5, 15);
+                modifyHealth(-damageAmount);
+                
+                addLog(`While traveling to ${cityName}, you were ambushed and lost ${damageAmount} health.`);
+                showNotification(`Travel ambush! Lost ${damageAmount} health.`);
+            }
+            
+            gameState.currentCity = cityName;
+            
+            // Generate new quests and store items for the city
+            regenerateQuests();
+            regenerateStoreItems();
+            
+            addLog(`You have arrived in ${cityName}.`);
+            
+            updateCurrentCityUI();
+            updateStoreUI();
+            updateQuestsUI();
+        }
+
+        function regenerateQuests() {
+            // Clear existing quests and generate 2-4 new ones
+            gameState.availableQuests = [];
+            
+            const numQuests = randomInt(2, 4);
+            for (let i = 0; i < numQuests; i++) {
+                const template = gameState.questTemplates[randomInt(0, gameState.questTemplates.length - 1)];
+                
+                // Clone the template and add unique ID
+                const quest = JSON.parse(JSON.stringify(template));
+                quest.id = Date.now() + i;
+                
+                gameState.availableQuests.push(quest);
+            }
+        }
+
+        function regenerateStoreItems() {
+            // Clear existing store inventory for the current city
+            const cityIndex = gameState.cities.findIndex(city => city.name === gameState.currentCity);
+            
+            if (cityIndex !== -1) {
+                // Add 5-8 random items to the store
+                gameState.cities[cityIndex].storeInventory = [];
+                
+                const numItems = randomInt(5, 8);
+                for (let i = 0; i < numItems; i++) {
+                    const item = JSON.parse(JSON.stringify(
+                        gameState.availableItems[randomInt(0, gameState.availableItems.length - 1)]
+                    ));
+                    
+                    // Apply city-specific pricing
+                    const tradingBonus = gameState.cities[cityIndex].tradingBonus;
+                    item.value = Math.max(1, Math.floor(item.value * (100 + tradingBonus) / 100));
+                    
+                    gameState.cities[cityIndex].storeInventory.push(item);
+                }
+            }
+        }
+
+        function acceptQuest(questIndex) {
+            if (questIndex >= 0 && questIndex < gameState.availableQuests.length) {
+                const quest = gameState.availableQuests[questIndex];
+                
+                // Check if player meets the requirements
+                if (gameState.character.skills[quest.requiredSkill] < quest.minSkillLevel) {
+                    addLog(`You need ${quest.requiredSkill} skill level ${quest.minSkillLevel} to accept this quest.`);
+                    return;
+                }
+                
+                // Quest success based on skill level difference
+                const skillDifference = gameState.character.skills[quest.requiredSkill] - quest.minSkillLevel;
+                const successChance = 0.5 + (skillDifference * 0.1);
+                
+                if (Math.random() < successChance) {
+                    // Quest successful
+                    const goldReward = randomInt(quest.goldReward[0], quest.goldReward[1]);
+                    const xpReward = randomInt(quest.xpReward[0], quest.xpReward[1]);
+                    
+                    modifyGold(goldReward);
+                    addXP(xpReward);
+                    changeAlignment(quest.alignmentShift);
+                    
+                    addLog(`Quest '${quest.title}' completed successfully! You earned ${goldReward} gold and ${xpReward} XP.`);
+                    showNotification("Quest completed!");
+                    
+                    // Chance for item reward
+                    if (quest.itemReward && Math.random() < 0.7) {
+                        const rewardItem = JSON.parse(JSON.stringify(
+                            gameState.availableItems[randomInt(0, gameState.availableItems.length - 1)]
+                        ));
+                        addItemToInventory(rewardItem);
+                        addLog(`You received a ${rewardItem.name} as a reward!`);
+                    }
+                } else {
+                    // Quest failed
+                    const healthLoss = randomInt(10, 25);
+                    modifyHealth(-healthLoss);
+                    
+                    addLog(`You failed the quest '${quest.title}' and lost ${healthLoss} health.`);
+                    showNotification("Quest failed!");
+                }
+                
+                // Remove the quest
+                gameState.availableQuests.splice(questIndex, 1);
+                updateQuestsUI();
+            }
+        }
+
+        function buyItem(itemId) {
+            // Find the item in the current city's inventory
+            const currentCity = gameState.cities.find(city => city.name === gameState.currentCity);
+            const itemIndex = currentCity.storeInventory.findIndex(item => item.id === itemId);
+            
+            if (itemIndex === -1) return;
+            
+            const item = currentCity.storeInventory[itemIndex];
+            
+            // Check if player has enough gold
+            if (gameState.character.gold < item.value) {
+                addLog("You don't have enough gold to buy this item.");
+                showNotification("Not enough gold!");
+                return;
+            }
+            
+            // Check if player has enough inventory space
+            if (gameState.character.inventoryWeight + item.weight > gameState.character.inventoryCapacity) {
+                addLog("Your inventory is too full to carry this item.");
+                showNotification("Inventory full!");
+                return;
+            }
+            
+            // Purchase the item
+            modifyGold(-item.value);
+            const purchasedItem = JSON.parse(JSON.stringify(item));
+            addItemToInventory(purchasedItem);
+            
+            // Remove from store inventory
+            currentCity.storeInventory.splice(itemIndex, 1);
+            
+            addLog(`You purchased ${item.name} for ${item.value} gold.`);
+            showNotification(`Purchased ${item.name}!`);
+            
+            updateStoreUI();
+            updateCharacterUI();
+        }
+
+        function sellItem(itemId) {
+            // Find the item in player's inventory
+            const itemIndex = gameState.character.inventory.findIndex(item => item.id === itemId);
+            
+            if (itemIndex === -1) return;
+            
+            const item = gameState.character.inventory[itemIndex];
+            const sellValue = Math.floor(item.value * 0.7);
+            
+            // Sell the item
+            modifyGold(sellValue);
+            gameState.character.inventoryWeight -= item.weight;
+            gameState.character.inventory.splice(itemIndex, 1);
+            
+            // If item was equipped, unequip it
+            for (const slot in gameState.character.equipment) {
+                if (gameState.character.equipment[slot] && gameState.character.equipment[slot].id === itemId) {
+                    gameState.character.equipment[slot] = null;
+                }
+            }
+            
+            addLog(`You sold ${item.name} for ${sellValue} gold.`);
+            showNotification(`Sold ${item.name}!`);
+            
+            updateStoreUI();
+            updateCharacterUI();
+        }
+
+        function addItemToInventory(item) {
+            // Generate a unique ID if the item doesn't have one
+            if (!item.id) {
+                item.id = Date.now() + Math.floor(Math.random() * 1000);
+            }
+            
+            gameState.character.inventory.push(item);
+            gameState.character.inventoryWeight += item.weight;
+            
+            updateCharacterUI();
+        }
+
+        function equipItem(itemId) {
+            // Find the item in player's inventory
+            const item = gameState.character.inventory.find(item => item.id === itemId);
+            
+            if (!item) return;
+            
+            // Determine which equipment slot to use
+            const slot = item.type === 'weapon' ? 'weapon' : 
+                         item.type === 'armor' ? 'armor' : 
+                         item.type === 'accessory' ? 'accessory' : null;
+            
+            if (!slot) return;
+            
+            // Equip the item
+            gameState.character.equipment[slot] = item;
+            addLog(`You equipped ${item.name}.`);
+            
+            updateCharacterUI();
+        }
+
+        function useItem(itemId) {
+            // Find the item in player's inventory
+            const itemIndex = gameState.character.inventory.findIndex(item => item.id === itemId);
+            
+            if (itemIndex === -1) return;
+            
+            const item = gameState.character.inventory[itemIndex];
+            
+            if (item.type !== 'consumable') return;
+            
+            // Apply the item's effect
+            if (item.effect === 'health') {
+                modifyHealth(item.amount);
+                addLog(`You used ${item.name} and restored ${item.amount} health.`);
+                showNotification(`Restored ${item.amount} health!`);
+            } else if (item.effect === 'xp') {
+                addXP(item.amount);
+                addLog(`You used ${item.name} and gained ${item.amount} XP.`);
+                showNotification(`Gained ${item.amount} XP!`);
+            }
+            
+            // Remove the item from inventory
+            gameState.character.inventoryWeight -= item.weight;
+            gameState.character.inventory.splice(itemIndex, 1);
+            
+            updateCharacterUI();
+        }
+
+        // Event Listeners
+        DOM.tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content sections
+                DOM.tabs.forEach(t => t.classList.remove('active'));
+                DOM.tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to the clicked tab
+                tab.classList.add('active');
+                
+                // Show the corresponding content
+                const contentId = tab.dataset.tab + '-tab';
+                document.getElementById(contentId).classList.add('active');
+            });
+        });
+
+        DOM.btnWork.addEventListener('click', performWork);
+        
+        DOM.btnTrain.addEventListener('click', () => {
+            // Toggle training section
+            DOM.trainingSection.style.display = DOM.trainingSection.style.display === 'none' ? 'block' : 'none';
+        });
+        
+        DOM.trainingSection.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn') && e.target.dataset.skill) {
+                trainSkill(e.target.dataset.skill);
+            }
+        });
+        
+        DOM.btnRest.addEventListener('click', restAtInn);
+        DOM.btnGoodDeed.addEventListener('click', performGoodDeed);
+        DOM.btnEvilDeed.addEventListener('click', performEvilDeed);
+        
+        DOM.cityList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-travel')) {
+                travelToCity(e.target.dataset.city);
+            }
+        });
+        
+        DOM.questList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-quest') && !e.target.disabled) {
+                acceptQuest(parseInt(e.target.dataset.questIndex));
+            }
+        });
+        
+        DOM.storeItems.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-buy')) {
+                buyItem(parseInt(e.target.dataset.itemId));
+            }
+        });
+        
+        DOM.sellableItems.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-sell')) {
+                sellItem(parseInt(e.target.dataset.itemId));
+            }
+        });
+        
+        DOM.inventoryList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-equip')) {
+                equipItem(parseInt(e.target.dataset.itemId));
+            } else if (e.target.classList.contains('btn-use')) {
+                useItem(parseInt(e.target.dataset.itemId));
+            }
+        });
+        
+        DOM.startGameBtn.addEventListener('click', () => {
+            const playerName = DOM.characterNameInput.value.trim();
+            
+            if (playerName) {
+                gameState.character.name = playerName;
+                DOM.startModal.style.display = 'none';
+                
+                initGame();
+            }
+        });
+        
+        DOM.characterNameInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                DOM.startGameBtn.click();
+            }
+        });
+
+        // Initialize game
+        function initGame() {
+            // Set up each city with initial store inventory
+            gameState.cities.forEach(city => {
+                city.storeInventory = [];
+                
+                // Add 5-8 random items to each store
+                const numItems = randomInt(5, 8);
+                for (let i = 0; i < numItems; i++) {
+                    // Clone a random item
+                    const item = JSON.parse(JSON.stringify(
+                        gameState.availableItems[randomInt(0, gameState.availableItems.length - 1)]
+                    ));
+                    
+                    // Apply city-specific pricing
+                    item.value = Math.max(1, Math.floor(item.value * (100 + city.tradingBonus) / 100));
+                    
+                    city.storeInventory.push(item);
+                }
+            });
+            
+            // Generate initial quests
+            regenerateQuests();
+            
+            // Give player a starter item
+            const starterSword = { 
+                id: Date.now(), 
+                name: "Rusty Sword", 
+                type: "weapon", 
+                value: 10, 
+                weight: 4, 
+                damage: 3 
+            };
+            addItemToInventory(starterSword);
+            equipItem(starterSword.id);
+            
+            // Update UI
+            updateCharacterUI();
+            updateCurrentCityUI();
+            updateStoreUI();
+            updateQuestsUI();
+            
+            addLog(`Welcome, ${gameState.character.name}! Your adventure begins in the city of ${gameState.currentCity}.`);
+        }
+    </script>
+</body>
+</html>
